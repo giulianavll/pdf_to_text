@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import os
 import json
 import re
+import fitz
 from PyPDF2 import PdfReader
 
 def replace_multiple_spaces(text):
@@ -128,9 +129,23 @@ def get_json(pdf_text,text_name,path):
      ajson["motifs"] = pdf_text[index_motifs:]
      with open(f"{path}/text_name.json", "w", encoding="utf-8") as out:
         json.dump(ajson, out, indent=4, ensure_ascii=False)
-    
      return 
-     
+def convert_pdf_text_2(path_file,name):  
+    
+    print("get text",name)    
+    pdf_text = ""
+    pdf_file = path_file+"/"+name+".pdf"
+    doc = fitz.open(pdf_file)  # open a document
+    for index, page in enumerate(doc):  # iterate the document pages
+        text = page.get_text()
+        text = replace_special_characters(text)
+        text = replace_multiple_spaces(text)
+        text = text.encode("utf-8", "ignore").decode("utf-8")
+        pdf_text = pdf_text +text
+    get_json(pdf_text,name,path_file)
+    return 
+
+
 def convert_pdf_text(path_file,name):  
     print("get text",name)    
     pdf_text = ""
