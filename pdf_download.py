@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import os
 import json
 import re
-import fitz
+# import fitz
 from PyPDF2 import PdfReader
 
 def replace_multiple_spaces(text):
@@ -116,34 +116,35 @@ def dowload_pdf(folder_root,link):
               else:
                      element =-1
 def get_json(pdf_text,text_name,path):
-     print("convert jason",text_name)
+     print("convert json",text_name)
      ajson={}
      lower_text = pdf_text.lower()
      index_faits = lower_text.find("\nfaits:\n")
      index_judgment = lower_text.find("\njugement\n")
      index_motifs = lower_text.find("\npar ces motifs\n")
      ajson["meta_name"] = text_name
-     ajson["head"]= pdf_text[:index_faits]
-     ajson["faits"] = pdf_text[index_faits:index_judgment]
-     ajson["judgment"] = pdf_text[index_judgment:index_motifs]
-     ajson["motifs"] = pdf_text[index_motifs:]
+     ajson["content"] = pdf_text
+     #ajson["head"]= pdf_text[:index_faits]
+     #ajson["faits"] = pdf_text[index_faits:index_judgment]
+     #ajson["judgment"] = pdf_text[index_judgment:index_motifs]
+     #ajson["motifs"] = pdf_text[index_motifs:]
      with open(f"{path}/text_name.json", "w", encoding="utf-8") as out:
         json.dump(ajson, out, indent=4, ensure_ascii=False)
      return 
-def convert_pdf_text_2(path_file,name):  
+# def convert_pdf_text_2(path_file,name):  
     
-    print("get text",name)    
-    pdf_text = ""
-    pdf_file = path_file+"/"+name+".pdf"
-    doc = fitz.open(pdf_file)  # open a document
-    for index, page in enumerate(doc):  # iterate the document pages
-        text = page.get_text()
-        text = replace_special_characters(text)
-        text = replace_multiple_spaces(text)
-        text = text.encode("utf-8", "ignore").decode("utf-8")
-        pdf_text = pdf_text +text
-    get_json(pdf_text,name,path_file)
-    return 
+#     print("get text",name)    
+#     pdf_text = ""
+#     pdf_file = path_file+"/"+name+".pdf"
+#     doc = fitz.open(pdf_file)  # open a document
+#     for index, page in enumerate(doc):  # iterate the document pages
+#         text = page.get_text()
+#         text = replace_special_characters(text)
+#         text = replace_multiple_spaces(text)
+#         text = text.encode("utf-8", "ignore").decode("utf-8")
+#         pdf_text = pdf_text +text
+#     get_json(pdf_text,name,path_file)
+#     return 
 
 
 def convert_pdf_text(path_file,name):  
